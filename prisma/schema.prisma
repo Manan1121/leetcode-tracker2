@@ -1,0 +1,31 @@
+// prisma/schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Problem {
+  id            Int      @id @default(autoincrement())
+  leetcodeId    Int
+  title         String
+  difficulty    String
+  url           String
+  notes         String?
+  dateAdded     DateTime @default(now())
+  nextReview    DateTime?
+  reviewCount   Int      @default(0)
+  reviews       Review[]
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  problemId    Int
+  problem      Problem  @relation(fields: [problemId], references: [id])
+  reviewedAt   DateTime @default(now())
+  confidence   Int      // 1-5 rating
+  notes        String?
+}
